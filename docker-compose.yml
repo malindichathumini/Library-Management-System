@@ -1,0 +1,16 @@
+﻿services:
+  booknest:
+    image: booknest
+    build:
+      context: .
+      dockerfile: BookNest/Dockerfile
+    ports:
+      - "5275:80"  # Map backend to port 5275
+
+  client:
+    image: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:3000"  # Map frontend to port 5173
