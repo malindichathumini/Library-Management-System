@@ -9,7 +9,7 @@ Getting Started
 Cloning the Repository
 Clone the repository:
 
-git clone https://github.com/malindichathumi/Library-Management-System.git
+git clone [https://github.com/malindichathumi/Library-Management-System.git](https://github.com/malindichathumini/Library-Management-System)
 Navigate to the project directory:
 
 cd Backend
