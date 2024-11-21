@@ -1,60 +1,50 @@
-Library management System
-This Library Management System helps users organize and manage the books in their library. This application consists of a backend built with ASP.NET Core and a frontend built with React.
+# React + TypeScript + Vite
 
-Prerequisites
-.NET 8 SDK
-Node.js (for the React frontend)
-Docker (optional, for running the application in containers)
-Getting Started
-Cloning the Repository
-Clone the repository:
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-git clone [https://github.com/malindichathumi/Library-Management-System.git](https://github.com/malindichathumini/Library-Management-System)
-Navigate to the project directory:
+Currently, two official plugins are available:
 
-cd Backend
-Running the Application Locally
-Backend (ASP.NET Core)
-Navigate to the backend project directory:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-cd Backend
-Restore the dependencies:
+## Expanding the ESLint configuration
 
-dotnet restore
-Update the database:
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-dotnet ef database update
-Run the backend application:
+- Configure the top-level `parserOptions` property like this:
 
-dotnet run
-The backend API will be available at http://localhost:5275.
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-Frontend (React)
-Navigate to the client directory:
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-cd client
-Create a .env.local file with the following content:
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
 
-VITE_SERVER_URL = 'http://localhost:5275'
-Install the dependencies:
-
-npm install
-Run the frontend application:
-
-npm start
-The frontend application will be available at http://localhost:5173.
-
-Running with Docker
-Build and run the Docker containers:
-
-docker-compose up --build
-This will start both the backend and frontend services.
-
-Features
-User authentication: Users can sign up and log in to access the application.
-Create a new book record: Users can add new books to their library.
-View a list of existing book records: Users can view the books they have added.
-Update an existing book record: Users can update the details of their books.
-Delete a book record: Users can delete books from their library.
-Contributing
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
+```
