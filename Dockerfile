@@ -1,29 +1,21 @@
-# Use an official Node.js runtime as a parent image
-FROM node:16 AS build
-
-# Set the working directory
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
+EXPOSE 80
 
-# Copy the package.json and package-lock.json files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["BookNest/BookNest.csproj", "BookNest/"]
+RUN dotnet restore "BookNest/BookNest.csproj"
 COPY . .
+WORKDIR "/src/BookNest"
+RUN dotnet build "BookNest.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Build the React app
-RUN npm run build
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "BookNest.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Use an official Nginx image to serve the React app
-FROM nginx:alpine
-
-# Copy the built React app from the previous stage
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Expose port 3000
-EXPOSE 3000
-
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "BookNest.dll"]
